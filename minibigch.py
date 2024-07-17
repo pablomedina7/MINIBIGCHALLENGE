@@ -1,25 +1,32 @@
 import random
 import time
 
-# Función para intercambiar elementos en una lista
-def swap(arr, i, j):
-    arr[i], arr[j] = arr[j], i
+# Función para particionar el array usando la mediana de tres como pivote
+def media_de_tres(arr, low, high):
+    mid = (low + high) // 2
+    if arr[low] > arr[mid]:
+        arr[low], arr[mid] = arr[mid], arr[low]
+    if arr[low] > arr[high]:
+        arr[low], arr[high] = arr[high], arr[low]
+    if arr[mid] > arr[high]:
+        arr[mid], arr[high] = arr[high], arr[mid]
+    return mid
 
-# Función para particionar el array usando el último elemento como pivote
-def partition(arr, low, high):
+def particion (arr, low, high):
+    mid = media_de_tres(arr, low, high)
+    arr[mid], arr[high] = arr[high], arr[mid]
     pivot = arr[high]
     i = low - 1
     for j in range(low, high):
         if arr[j] < pivot:
             i += 1
-            swap(arr, i, j)
-    swap(arr, i + 1, high)
+            arr[i], arr[j] = arr[j], arr[i]
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
-# Función principal que implementa QuickSort
 def quickSort(arr, low, high):
     if low < high:
-        pi = partition(arr, low, high)
+        pi = particion (arr, low, high)
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
 
@@ -36,7 +43,6 @@ def measure_performance_and_memory(dataset):
     execution_time = (end_time - start_time) * 1000  # en milisegundos
 
     # Calcular el uso de memoria estimado
-    # Tamaño estimado en kilobytes
     memory_usage = len(dataset) * 8 / 1024  # asumimos 8 bytes por elemento (tamaño de referencia)
     return execution_time, memory_usage
 
@@ -52,3 +58,4 @@ def measure_and_print_results(dataset, label):
 measure_and_print_results(conjuntoP, "Conjunto Pequeño (100 elementos)")
 measure_and_print_results(conjuntoM, "Conjunto Mediano (300 elementos)")
 measure_and_print_results(conjuntoG, "Conjunto Grande (500 elementos)")
+
